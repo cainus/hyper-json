@@ -1,8 +1,8 @@
 {
   "name": "hyperjson",
-  "description": "",
+  "description": "add links to json for hypermedia apis",
   "keywords": [],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "bugs": {
     "url": "https://github.com/cainus/hyper-json/issues"
   },
@@ -12,8 +12,7 @@
   "maintainers": [
     "Gregg Caines <gregg@caines.ca> (http://caines.ca)"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "mocha-lcov-reporter": "0.0.1",
     "jscoverage": "0.3.6",
@@ -31,5 +30,8 @@
     "url": "git://github.com/cainus/hyper-json.git"
   },
   "author": "Gregg Caines",
-  "license": "BSD"
+  "license": "BSD-2-Clause",
+  "directories": {
+    "test": "test"
+  }
 }

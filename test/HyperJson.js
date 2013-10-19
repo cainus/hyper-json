@@ -2,6 +2,12 @@ var should = require('should');
 var HyperJson = require('../index');
 
 describe("HyperJson", function(){
+  describe("#constructor", function(){
+    it ("works as a function", function(){
+      HyperJson({thisis : "a test"})
+          .toString().should.eql('{"thisis":"a test"}');
+    });
+  });
   describe("#toString", function(){
     it ("should return a json string", function(){
       new HyperJson({thisis : "a test"})
