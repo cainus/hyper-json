@@ -24,7 +24,7 @@ describe("HyperJson", function(){
     it ("should add a property to a json object that doesn't have it", function(){
       new HyperJson({thisis : "a test"})
           .property("prop1", {random : "value"})
-          .toObject().should.eql({ thisis : "a test", 
+          .toObject().should.eql({ thisis : "a test",
                                    prop1 : {
                                      random : "value"}
                                    });
@@ -35,9 +35,9 @@ describe("HyperJson", function(){
     it ("should add a link to a json object that has no links", function(){
       new HyperJson({thisis : "a test"})
           .link("self", "http://percolatorjs.com")
-          .toObject().should.eql({ thisis : "a test", 
+          .toObject().should.eql({ thisis : "a test",
                                    _links : {
-                                     self : {href : 
+                                     self : {href :
                                              "http://percolatorjs.com"}
                                    }});
 
@@ -48,12 +48,12 @@ describe("HyperJson", function(){
                       _links : {  self : { href : "http://blah.com" }}
           })
           .link("self", "http://percolatorjs.com")
-          .toObject().should.eql({ thisis : "a test", 
+          .toObject().should.eql({ thisis : "a test",
                                    _links : {
                                      self : [
-                                       {href : 
+                                       {href :
                                              "http://blah.com"},
-                                       {href : 
+                                       {href :
                                              "http://percolatorjs.com"}
                                             ]
                                    }});
@@ -71,14 +71,45 @@ describe("HyperJson", function(){
     it ("should add a link with type, method and schema options", function(){
       new HyperJson({thisis : "a test"})
           .link("self", "http://percolatorjs.com", {type : 'application/json', schema : {}, method : 'POST'})
-          .toObject().should.eql({ thisis : "a test", 
+          .toObject().should.eql({ thisis : "a test",
                                    _links : {
                                      self : {href : "http://percolatorjs.com",
                                              type : 'application/json',
                                              schema : {},
                                              method : 'POST'}
                                    }});
-
     });
+    describe("when option", function() {
+      var obj;
+      beforeEach(function() {
+        obj = new HyperJson({thisis : "a test"})
+      });
+      describe("should attach a link if a when condition is true and is", function() {
+        it('an expression', function() {
+          obj.link("self", "http://percolatorjs.com", {schema : {}, when: 1})
+          .toObject().should.eql({ thisis : "a test",
+                                   _links : {
+                                     self : {schema : {}, href : "http://percolatorjs.com"}
+                                   }});
+        });
+        it('a function', function() {
+          obj.link("self", "http://percolatorjs.com", {schema : {}, when: function(obj) {return obj.thisis === "a test"}})
+          .toObject().should.eql({ thisis : "a test",
+                                   _links : {
+                                     self : {schema : {}, href : "http://percolatorjs.com"}
+                                   }});
+        });
+      });
+      describe("should not attach a link if a when condition is false and is", function() {
+        it('an expression', function() {
+          obj.link("self", "http://percolatorjs.com", {schema : {}, when: 0})
+          .toObject().should.eql({ thisis : "a test"});
+        });
+        it('a function', function() {
+          obj.link("self", "http://percolatorjs.com", {schema : {}, when: function(obj) {return obj.thisis === "a crest"}})
+          .toObject().should.eql({ thisis : "a test"});
+        });
+      });
+    })
   });
 });
