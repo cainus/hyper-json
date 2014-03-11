@@ -2,7 +2,7 @@
   "name": "hyperjson",
   "description": "add links to json for hypermedia apis",
   "keywords": [],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "bugs": {
     "url": "https://github.com/cainus/hyper-json/issues"
   },
