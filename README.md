@@ -32,7 +32,8 @@ Adds a property to the json output.
 ```javascript
 hyperjson({thisis : "a test"})
   .property("prop1", {random : "value"})
-  .toObject();                 /* { thisis : "a test", 
+  .toObject();                 /* { 
+                                    thisis : "a test", 
                                     prop1 : {
                                       random : "value"}
                                   }
@@ -45,7 +46,8 @@ Adds a link to the json output.
 ```javascript
 hyperjson({thisis : "a test"})
   .link("self", "http://localhost:8080/api/test")
-  .toObject();                 /* { thisis : "a test", 
+  .toObject();                 /* { 
+                                    thisis : "a test", 
                                     _links : {
                                       self : {
                                         href : "http://localhost:8080/api/test"
@@ -53,14 +55,15 @@ hyperjson({thisis : "a test"})
                                   }
                                */
 ```
-This can be called multiple times to add more links.
+This can be called multiple times to add more links.  Note that if two links are assigned to the same key, the key will be mapped to an array of links.
 ```javascript
 hyperjson({thisis : "a test"})
   .link("self", "http://localhost:8080/api/test")
   .link("parent", "http://localhost:8080/api/")
   .link("kid", "http://localhost:8080/api/kid1")
   .link("kid", "http://localhost:8080/api/kid2")
-  .toObject();                 /* { thisis : "a test", 
+  .toObject();                 /* { 
+                                    thisis : "a test", 
                                     _links : {
                                       self : {
                                         href : "http://localhost:8080/api/test"
@@ -80,17 +83,46 @@ hyperjson({thisis : "a test"})
 ```javascript
 hyperjson({thisis : "a test"})
   .link("self", "http://percolatorjs.com", {type : 'application/json', schema : {}, method : 'POST'})
-  .toObject();                  /* {  thisis : "a test", 
+  .toObject();                  /* {  
+                                      thisis : "a test", 
                                       _links : {
                                           self : { href : "http://percolatorjs.com",
                                                    type : 'application/json',
                                                    schema : {},
                                                    method : 'POST' }
                                       }
-                                    }
+                                   }
+                                */
+```
+In addition, the options argument of `link()` can also take a `when` property, which maps to a function or an expression.  The link will be added if and only if this function or expression is truthy.
+```javascript
+hyperjson({thisis : "a test"})
+  .link("self", "http://percolatorjs.com", {when: 1 + 1 === 2, method: 'POST'})
+  .toObject();                  /* {  
+                                      thisis : "a test", 
+                                      _links : {
+                                          self : { 
+                                            href : "http://percolatorjs.com",
+                                            method: 'POST'
+                                          }
+                                      }
+                                   }
                                 */
 
-```
+hyperjson({thisis : "a test"})
+  .link("self", "http://percolatorjs.com", {when: function(obj) {obj.thisis === "a test"})
+  .toObject();                  /* {  
+                                      thisis : "a test", 
+                                      _links : {
+                                          self : { href : "http://percolatorjs.com" }
+                                      }
+                                   }
+                                */
 
+hyperjson({thisis : "a test"})
+  .link("self", "http://percolatorjs.com", {when: function(obj) {obj.thisis === "not a test"})
+  .toObject();                  // {  thisis : "a test" } - no links are created
+                                
+```
 Check out the [hyper+json spec](https://github.com/cainus/hyper-json-spec) if you want to read more about these kinds of links.
 
